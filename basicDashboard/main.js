@@ -1,26 +1,41 @@
 let mic;
-let color;
-let peakDetect;
 let fft;
+let button;
+let w;
+let counter = 180;
+// let amplitude;
 
 function setup() {
-  createCanvas(600, 600);
-  mic = new p5.AudioIn();
+  createCanvas(255, 255);
+  angleMode(DEGREES);
+  colorMode(HSB);
+  w = width / 64;
+  mic = new p5.AudioIn(0.5, 64);
   mic.start();
+
   fft = new p5.FFT();
   fft.setInput(mic);
-  //peakDetect = new p5.PeakDetect(430, 450, 0.35, 20);
 }
 function draw() {
-  background(190);
+  // background(220);
+  background(0);
   let spectrum = fft.analyze();
-
   micLevel = mic.getLevel();
 
-  ellipse(width / 2, height / 2, micLevel * 400, micLevel * 400);
-  //   beginShape();
-  //   for (i = 0; i < spectrum.length; i++) {
-  //     vertex(i, map(spectrum[i], 0, 255, height, 0));
-  //   }
-  //   endShape();
+  for (let i = 0; i < spectrum.length; i++) {
+    let amp = spectrum[i];
+    let y = map(amp, 0, 256, height, 0);
+    fill(i, 255, 255);
+    rect(i * w, y, w - 2, height - y);
+  }
+  counter += 1;
+
+  console.log(counter);
+  arc(50, 50, 80, 80, 180, counter, PIE);
+
+  if (counter >= 360) {
+    console.log('FULL');
+    counter = 180;
+  }
 }
+function startAnalysis() {}
