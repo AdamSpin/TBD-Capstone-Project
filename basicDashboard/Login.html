@@ -4,26 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Dashboard</title>
+    <link rel="stylesheet" href="./CSS/style.css"/>
 </head>
 <body>
-    <h1>Welcome to earTreble</h1>
-     <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+    
+    <header>
+        <h1>Welcome to earTable</h1>
+    </header>
+    
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-
-    <button type="submit">Login</button>
-    <label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label>
+    <div class="login">
+        <!-- Username -->
+        <div class = "usr">
+            <label for="uname"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="uname" required>
+        </div> 
+        <!-- Password --> 
+        <div class = "pwd">
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+        </div>
+        <!-- Login button-->
+        <div class = "loginButtons">
+            <button type="submit">Login</button>
+            <!-- "Remember me" button-->
+            <label><input type="checkbox" checked="checked" name="remember"> Remember me</label>
+        </div>
     </div>
 
-      <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
+    <!-- Forgot password -->
+    <div class="forgotPassword">
+        <button type="button" class="cancelbtn">Cancel</button>
+        <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
 
-      </div>
 </body>
 </html>
