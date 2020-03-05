@@ -1,5 +1,5 @@
 let mic;
-fft;
+let fft;
 let button;
 let midMax = 100000;
 let w;
