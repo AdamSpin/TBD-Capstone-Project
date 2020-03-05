@@ -1,0 +1,116 @@
+let mic, fft, micLevel;
+let w;
+
+mic = new p5.AudioIn(0.5, 64);
+mic.start();
+fft = new p5.FFT();
+fft.setInput(mic);
+
+let eqSketch = function(e) {
+  e.setup = function() {
+    e.createCanvas(600, 600);
+    e.angleMode(e.DEGREES);
+    e.colorMode(e.HSB);
+    w = e.width / 64;
+  };
+
+  e.draw = function() {
+    e.background(190);
+    let spectrum = fft.analyze();
+
+    micLevel = mic.getLevel();
+
+    for (let i = 0; i < spectrum.length; i++) {
+      e.amp = spectrum[i];
+      e.y = e.map(e.amp, 0, 256, e.height, 0);
+      e.fill(i, 255, 255);
+      e.rect(i * w, e.y, w - 2, e.height - e.y);
+    }
+  };
+};
+
+//Low frequencies of 0-379
+let lowSketch = function(l) {
+  l.counter = 181;
+  l.lowMax = 100000;
+  l.setup = function() {
+    l.createCanvas(300, 300);
+    l.angleMode(l.DEGREES);
+  };
+  l.draw = function() {
+    l.background(190);
+    l.textSize(16);
+    l.text('Low Frequencies', l.width/2, 20);
+    let lowenergy = fft.getEnergy(1, 379);
+    let maxLow = lowenergy * (180 / l.lowMax);
+
+    l.counter += maxLow;
+
+    l.fill(255, 0, 0);
+    l.arc(l.width / 2, l.height / 2, 200, 200, 180, l.counter, l.PIE);
+
+    if (l.counter >= 360) {
+      console.log('FULL');
+      l.counter = 181;
+    }
+  };
+};
+
+//Mid frequencies of 380-1000
+let midSketch = function(m) {
+  m.counter = 181;
+  m.midMax = 100000;
+  m.setup = function() {
+    m.createCanvas(300, 300);
+    m.angleMode(m.DEGREES);
+  };
+  m.draw = function() {
+    m.background(190);
+    m.textSize(16);
+    m.text('Mid Frequencies', m.width/2, 20);
+    let midenergy = fft.getEnergy(380, 1000);
+    let maxMid = midenergy * (180 / m.midMax);
+
+    m.counter += maxMid;
+
+    m.fill(0, 255, 0);
+    m.arc(m.width / 2, m.height / 2, 200, 200, 180, m.counter, m.PIE);
+
+    if (m.counter >= 360) {
+      console.log('FULL');
+      m.counter = 181;
+    }
+  };
+};
+
+//High frequencies of 1000-10000
+let highSketch = function(h) {
+  h.counter = 181;
+  h.highMax = 100000;
+  h.setup = function() {
+    h.createCanvas(300, 300);
+    h.angleMode(h.DEGREES);
+  };
+  h.draw = function() {
+    h.background(190);
+    h.textSize(16);
+    h.text('High Frequencies', h.width/2, 20);
+    let highenergy = fft.getEnergy(1000, 10000);
+    let maxHigh = highenergy * (180 / h.highMax);
+
+    h.counter += maxHigh;
+
+    h.fill(0, 0, 255);
+    h.arc(h.width / 2, h.height / 2, 200, 200, 180, h.counter, h.PIE);
+
+    if (h.counter >= 360) {
+      console.log('FULL');
+      h.counter = 181;
+    }
+  };
+};
+
+let eq = new p5(eqSketch);
+let bass = new p5(lowSketch);
+let mid = new p5(midSketch);
+let high = new p5(highSketch);
