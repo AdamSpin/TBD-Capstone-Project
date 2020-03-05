@@ -20,6 +20,12 @@ function draw() {
   // background(220);
   background(0);
   let spectrum = fft.analyze();
+  let bassenergy = fft.getEnergy('bass');
+  let midenergy = fft.getEnergy('mid');
+  let highenergy = fft.getEnergy('treble');
+
+  let maxMid = midenergy * (180 / midMax);
+
   micLevel = mic.getLevel();
 
   for (let i = 0; i < spectrum.length; i++) {
@@ -28,8 +34,8 @@ function draw() {
     fill(i, 255, 255);
     rect(i * w, y, w - 2, height - y);
   }
-  counter += 1;
-
+  counter += maxMid;
+  
   console.log(counter);
   arc(50, 50, 80, 80, 180, counter, PIE);
 
