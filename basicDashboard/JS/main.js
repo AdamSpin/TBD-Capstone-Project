@@ -36,7 +36,7 @@ function draw() {
     rect(i * w, y, w - 2, height - y);
   }
   counter += maxMid;
-  
+
   fill(255);
   arc(50, 50, 80, 80, 180, counter, PIE);
 
