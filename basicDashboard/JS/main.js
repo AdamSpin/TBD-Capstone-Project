@@ -1,12 +1,13 @@
 let mic;
-let fft;
+fft;
 let button;
+let midMax = 100000;
 let w;
 let counter = 180;
 // let amplitude;
 
 function setup() {
-  createCanvas(255, 255);
+  createCanvas(600, 600);
   angleMode(DEGREES);
   colorMode(HSB);
   w = width / 64;
@@ -36,7 +37,7 @@ function draw() {
   }
   counter += maxMid;
   
-  console.log(counter);
+  fill(255);
   arc(50, 50, 80, 80, 180, counter, PIE);
 
   if (counter >= 360) {
@@ -44,4 +45,3 @@ function draw() {
     counter = 180;
   }
 }
-function startAnalysis() {}
