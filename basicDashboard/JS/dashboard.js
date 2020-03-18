@@ -1,10 +1,38 @@
-let mic, fft, micLevel;
+let mic, fft, micLevel, octBands;
+let octDiv = 12;
+let bins = 1024;
+let smoothing = 0.8;
+let threshold = 10000;
+let bg = 255;
 let w;
 
-mic = new p5.AudioIn(0.5, 64);
+mic = new p5.AudioIn();
 mic.start();
-fft = new p5.FFT();
+fft = new p5.FFT(smoothing,bins);
 fft.setInput(mic);
+octBands = fft.getOctaveBands(octDiv);
+
+let gsketch = s => {
+  let logFrqzy, barWidth;
+  let cAmp = Array(bins).fill(0);
+
+  s.setup = () => {
+    s.createCanvas(s.windowWidth, s.windowHeight/2);
+    s.background(bg);
+    s.stroke(bg);
+  }
+
+  s.draw = () => {
+    fft.analyze();
+    logFrqzy = fft.logAverages(octBands);
+    barWidth = s.width/logFrqzy.length;
+    cAmp = logFrqzy.map((x, i) => cAmp[i] + x * (s.deltaTime/1000));
+    for (i = 0; i < logFrqzy.length; i++) {
+      s.fill(s.color(s.constrain(logFrqzy[i]*2, 0, 255), 255 - (s.constrain(logFrqzy[i] - 128, 0,127)*2), 0));
+      s.rect(i*barWidth, s.height, barWidth, -(cAmp[i] / threshold * s.height));
+    }
+  }
+}
 
 let eqSketch = function(e) {
   e.setup = function() {
@@ -110,7 +138,7 @@ let highSketch = function(h) {
   };
 };
 
-let eq = new p5(eqSketch);
+new p5(gsketch);
 let bass = new p5(lowSketch);
 let mid = new p5(midSketch);
 let high = new p5(highSketch);
