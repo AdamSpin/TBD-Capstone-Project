@@ -1,9 +1,9 @@
 let mic, fft, micLevel;
 let w;
 
-mic = new p5.AudioIn(0.5, 64);
+mic = new p5.AudioIn();
 mic.start();
-fft = new p5.FFT();
+fft = new p5.FFT(0.8, 128);
 fft.setInput(mic);
 
 let eqSketch = function(e) {
@@ -11,15 +11,15 @@ let eqSketch = function(e) {
     e.createCanvas(600, 600);
     e.angleMode(e.DEGREES);
     e.colorMode(e.HSB);
-    w = e.width / 64;
+    w = e.width / 128;
   };
 
   e.draw = function() {
-    e.background(190);
+    e.background(0, 0, 79);
     let spectrum = fft.analyze();
 
     micLevel = mic.getLevel();
-
+    e.noStroke();
     for (let i = 0; i < spectrum.length; i++) {
       e.amp = spectrum[i];
       e.y = e.map(e.amp, 0, 256, e.height, 0);
@@ -40,7 +40,7 @@ let lowSketch = function(l) {
   l.draw = function() {
     l.background(190);
     l.textSize(16);
-    l.text('Low Frequencies', l.width/2, 20);
+    l.text('Low Frequencies', l.width / 2, 20);
     let lowenergy = fft.getEnergy(1, 379);
     let maxLow = lowenergy * (180 / l.lowMax);
 
@@ -50,7 +50,7 @@ let lowSketch = function(l) {
     l.arc(l.width / 2, l.height / 2, 200, 200, 180, l.counter, l.PIE);
 
     if (l.counter >= 360) {
-      console.log('FULL');
+      console.log('LOW FULL');
       l.counter = 181;
     }
   };
@@ -67,7 +67,7 @@ let midSketch = function(m) {
   m.draw = function() {
     m.background(190);
     m.textSize(16);
-    m.text('Mid Frequencies', m.width/2, 20);
+    m.text('Mid Frequencies', m.width / 2, 20);
     let midenergy = fft.getEnergy(380, 1000);
     let maxMid = midenergy * (180 / m.midMax);
 
@@ -77,7 +77,7 @@ let midSketch = function(m) {
     m.arc(m.width / 2, m.height / 2, 200, 200, 180, m.counter, m.PIE);
 
     if (m.counter >= 360) {
-      console.log('FULL');
+      console.log('MID FULL');
       m.counter = 181;
     }
   };
@@ -94,7 +94,7 @@ let highSketch = function(h) {
   h.draw = function() {
     h.background(190);
     h.textSize(16);
-    h.text('High Frequencies', h.width/2, 20);
+    h.text('High Frequencies', h.width / 2, 20);
     let highenergy = fft.getEnergy(1000, 10000);
     let maxHigh = highenergy * (180 / h.highMax);
 
@@ -104,7 +104,7 @@ let highSketch = function(h) {
     h.arc(h.width / 2, h.height / 2, 200, 200, 180, h.counter, h.PIE);
 
     if (h.counter >= 360) {
-      console.log('FULL');
+      console.log('HIGH FULL');
       h.counter = 181;
     }
   };
