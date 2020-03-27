@@ -5,6 +5,11 @@ let smoothing = 0.8;
 let threshold = 10000;
 let bg = 255;
 let w;
+let lowEnergyMax = 108000;  //30 minutes
+let midEnergyMax = 18000;   //5 minutes
+let hiEnergyMax = 3600;     //1 minute
+let lowEnergyCapDB = -80;
+let midEnergyCapDB = -40;
 
 mic = new p5.AudioIn();
 mic.start();
@@ -69,7 +74,7 @@ let eqSketch = function(e) {
 
 let lowLowSketch = function(ll){
   ll.counter = 181;
-  ll.llMax = 3600;
+  ll.llMax = lowEnergyMax;
   ll.setup = function(){
     ll.createCanvas(300,300);
     ll.angleMode(ll.DEGREES);
@@ -88,7 +93,7 @@ let lowLowSketch = function(ll){
     }
     curCount = (curCount / 10);
     //If average energy is "low", increase counter
-    if(curCount < -80){
+    if(curCount < lowEnergyCapDB){
       ll.counter += (180 / ll.llMax);
     }
 
@@ -97,6 +102,278 @@ let lowLowSketch = function(ll){
 
     if(ll.counter >= 360){
       ll.counter = 181;
+    }
+  };
+};
+
+let lowMidSketch = function(lm){
+  lm.counter = 181;
+  lm.lmMax = midEnergyMax;
+  lm.setup = function(){
+    lm.createCanvas(300,300);
+    lm.angleMode(lm.DEGREES);
+  };
+  lm.draw = function(){
+    lm.background(190);
+    lm.textSize(16);
+    lm.text("Low Freq, Mid Energy", lm.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let lmAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=1; i < 11; i++){
+      curCount += lmAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "medium", increase counter
+    if(curCount < midEnergyCapDB && curCount >= lowEnergyCapDB){
+      lm.counter += (180 / lm.lmMax);
+    }
+
+    lm.fill(255, 0, 0);
+    lm.arc(lm.width / 2, lm.height / 2, 200, 200, 180, lm.counter, lm.PIE);
+
+    if(lm.counter >= 360){
+      lm.counter = 181;
+    }
+  };
+};
+
+let lowHiSketch = function(lh){
+  lh.counter = 181;
+  lh.lhMax = hiEnergyMax;
+  lh.setup = function(){
+    lh.createCanvas(300,300);
+    lh.angleMode(lh.DEGREES);
+  };
+  lh.draw = function(){
+    lh.background(190);
+    lh.textSize(16);
+    lh.text("Low Freq, High Energy", lh.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let lhAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=1; i < 11; i++){
+      curCount += lhAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "high", increase counter
+    if(curCount >= midEnergyCapDB){
+      lh.counter += (180 / lh.lhMax);
+    }
+
+    lh.fill(255, 0, 0);
+    lh.arc(lh.width / 2, lh.height / 2, 200, 200, 180, lh.counter, lh.PIE);
+
+    if(lh.counter >= 360){
+      lh.counter = 181;
+    }
+  };
+};
+
+let midLowSketch = function(ml){
+  ml.counter = 181;
+  ml.mlMax = lowEnergyMax;
+  ml.setup = function(){
+    ml.createCanvas(300,300);
+    ml.angleMode(ml.DEGREES);
+  };
+  ml.draw = function(){
+    ml.background(190);
+    ml.textSize(16);
+    ml.text("Mid Freq, Low Energy", ml.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let mlAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=11; i < 21; i++){
+      curCount += mlAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount < lowEnergyCapDB){
+      ml.counter += (180 / ml.mlMax);
+    }
+
+    ml.fill(255, 0, 0);
+    ml.arc(ml.width / 2, ml.height / 2, 200, 200, 180, ml.counter, ml.PIE);
+
+    if(ml.counter >= 360){
+      ml.counter = 181;
+    }
+  };
+};
+
+let midMidSketch = function(mm){
+  mm.counter = 181;
+  mm.mmMax = midEnergyMax;
+  mm.setup = function(){
+    mm.createCanvas(300,300);
+    mm.angleMode(mm.DEGREES);
+  };
+  mm.draw = function(){
+    mm.background(190);
+    mm.textSize(16);
+    mm.text("Mid Freq, Mid Energy", mm.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let mmAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=11; i < 21; i++){
+      curCount += mmAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount < midEnergyCapDB && curCount >= lowEnergyCapDB){
+      mm.counter += (180 / mm.mmMax);
+    }
+
+    mm.fill(255, 0, 0);
+    mm.arc(mm.width / 2, mm.height / 2, 200, 200, 180, mm.counter, mm.PIE);
+
+    if(mm.counter >= 360){
+      mm.counter = 181;
+    }
+  };
+};
+
+let midHiSketch = function(mh){
+  mh.counter = 181;
+  mh.mhMax = hiEnergyMax;
+  mh.setup = function(){
+    mh.createCanvas(300,300);
+    mh.angleMode(mh.DEGREES);
+  };
+  mh.draw = function(){
+    mh.background(190);
+    mh.textSize(16);
+    mh.text("Mid Freq, High Energy", mh.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let mhAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=11; i < 21; i++){
+      curCount += mhAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount >= midEnergyCapDB){
+      mh.counter += (180 / mh.mhMax);
+    }
+
+    mh.fill(255, 0, 0);
+    mh.arc(mh.width / 2, mh.height / 2, 200, 200, 180, mh.counter, mh.PIE);
+
+    if(mh.counter >= 360){
+      mh.counter = 181;
+    }
+  };
+};
+
+let hiLowSketch = function(hl){
+  hl.counter = 181;
+  hl.hlMax = lowEnergyMax;
+  hl.setup = function(){
+    hl.createCanvas(300,300);
+    hl.angleMode(hl.DEGREES);
+  };
+  hl.draw = function(){
+    hl.background(190);
+    hl.textSize(16);
+    hl.text("High Freq, Low Energy", hl.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let hlAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=21; i < 31; i++){
+      curCount += hlAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount < lowEnergyCapDB){
+      hl.counter += (180 / hl.hlMax);
+    }
+
+    hl.fill(255, 0, 0);
+    hl.arc(hl.width / 2, hl.height / 2, 200, 200, 180, hl.counter, hl.PIE);
+
+    if(hl.counter >= 360){
+      hl.counter = 181;
+    }
+  };
+};
+
+let hiMidSketch = function(hm){
+  hm.counter = 181;
+  hm.hmMax = midEnergyMax;
+  hm.setup = function(){
+    hm.createCanvas(300,300);
+    hm.angleMode(hm.DEGREES);
+  };
+  hm.draw = function(){
+    hm.background(190);
+    hm.textSize(16);
+    hm.text("High Freq, Mid Energy", hm.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let hmAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=21; i < 31; i++){
+      curCount += llAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount < midEnergyCapDB && curCount >= lowEnergyCapDB){
+      hm.counter += (180 / hm.hmMax);
+    }
+
+    hm.fill(255, 0, 0);
+    hm.arc(hm.width / 2, hm.height / 2, 200, 200, 180, hm.counter, hm.PIE);
+
+    if(hm.counter >= 360){
+      hm.counter = 181;
+    }
+  };
+};
+
+let hiHiSketch = function(hh){
+  hh.counter = 181;
+  hh.hhMax = hiEnergyMax;
+  hh.setup = function(){
+    hh.createCanvas(300,300);
+    hh.angleMode(hh.DEGREES);
+  };
+  hh.draw = function(){
+    hh.background(190);
+    hh.textSize(16);
+    hh.text("High Freq, High Energy", hh.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let hhAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=21; i < 31; i++){
+      curCount += hhAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount >= midEnergyCapDB){
+      hh.counter += (180 / hh.hhMax);
+    }
+
+    hh.fill(255, 0, 0);
+    hh.arc(hh.width / 2, hh.height / 2, 200, 200, 180, hh.counter, hh.PIE);
+
+    if(hh.counter >= 360){
+      hh.counter = 181;
     }
   };
 };
@@ -185,6 +462,14 @@ let highSketch = function(h) {
 */
 new p5(gsketch);
 let lowLowTest = new p5(lowLowSketch);
+let lowMidTest = new p5(lowMidSketch);
+let lowHiTest = new p5(lowHiSketch);
+let midLowTest = new p5(midLowSketch);
+let midMidTest = new p5(midMidSketch);
+let midHiTest = new p5(midHiSketch);
+let hiLowTest = new p5(hiLowSketch);
+let hiMidTest = new p5(hiMidSketch);
+let hiHiTest = new p5(hiHiSketch);
 /*
 let bass = new p5(lowSketch);
 let mid = new p5(midSketch);
