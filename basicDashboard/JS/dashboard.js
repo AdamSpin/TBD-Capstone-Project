@@ -57,6 +57,51 @@ let eqSketch = function(e) {
   };
 };
 
+/*----------FUNCTION DEINITION RULES-----------
+  Function names are the frequency range, then
+  the energy range. For example lowMidSketch
+  would be the graph for low frequency, medium
+  energy.                                      */
+
+//Formula for Max values is (numSeconds * 60).
+//For example, llMax = 108000
+//This is 1800 seconds, or 30 minutes
+
+let lowLowSketch = function(ll){
+  ll.counter = 181;
+  ll.llMax = 3600;
+  ll.setup = function(){
+    ll.createCanvas(300,300);
+    ll.angleMode(ll.DEGREES);
+  };
+  ll.draw = function(){
+    ll.background(190);
+    ll.textSize(16);
+    ll.text("Low Freq, Low Energy", ll.width / 2, 20);
+    //Get energies of 32 frequency bands in decibels
+    let llAnalysis = fft.analyze(32, "dB");
+    //Average energy over entire low freq band
+    let curCount = 0;
+    var i;
+    for(i=1; i < 11; i++){
+      curCount += llAnalysis[i];
+    }
+    curCount = (curCount / 10);
+    //If average energy is "low", increase counter
+    if(curCount < -80){
+      ll.counter += (180 / ll.llMax);
+    }
+
+    ll.fill(255, 0, 0);
+    ll.arc(ll.width / 2, ll.height / 2, 200, 200, 180, ll.counter, ll.PIE);
+
+    if(ll.counter >= 360){
+      ll.counter = 181;
+    }
+  };
+};
+
+/*
 //Low frequencies of 0-379
 let lowSketch = function(l) {
   l.counter = 181;
@@ -137,8 +182,11 @@ let highSketch = function(h) {
     }
   };
 };
-
+*/
 new p5(gsketch);
+let lowLowTest = new p5(lowLowSketch);
+/*
 let bass = new p5(lowSketch);
 let mid = new p5(midSketch);
 let high = new p5(highSketch);
+*/
