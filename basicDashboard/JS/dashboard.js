@@ -327,7 +327,7 @@ let hiMidSketch = function(hm){
     let curCount = 0;
     var i;
     for(i=21; i < 31; i++){
-      curCount += llAnalysis[i];
+      curCount += hmAnalysis[i];
     }
     curCount = (curCount / 10);
     //If average energy is "low", increase counter
