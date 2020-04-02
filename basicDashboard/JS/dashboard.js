@@ -460,7 +460,7 @@ let highSketch = function(h) {
   };
 };
 */
-new p5(gsketch);
+//new p5(gsketch);
 let lowLowTest = new p5(lowLowSketch);
 let lowMidTest = new p5(lowMidSketch);
 let lowHiTest = new p5(lowHiSketch);
