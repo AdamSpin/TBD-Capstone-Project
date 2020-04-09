@@ -12,10 +12,17 @@ let lowEnergyCapDB = -80;
 let midEnergyCapDB = -40;
 
 mic = new p5.AudioIn();
-mic.start();
 fft = new p5.FFT(smoothing,bins);
 fft.setInput(mic);
 octBands = fft.getOctaveBands(octDiv);
+
+function start(){
+  mic.start();
+}
+
+function stop(){
+  mic.stop();
+}
 
 let gsketch = s => {
   let logFrqzy, barWidth;
