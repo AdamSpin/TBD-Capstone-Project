@@ -1,15 +1,17 @@
 let mic, fft, micLevel, octBands;
 let octDiv = 12;
-let bins = 1024;
-let smoothing = 0.8;
+let bins = 512;
+let smoothing = 0.3;
 let threshold = 10000;
-let bg = 255;
-let w;
-let lowEnergyMax = 108000;  //30 minutes
-let midEnergyMax = 18000;   //5 minutes
-let hiEnergyMax = 3600;     //1 minute
-let lowEnergyCapDB = -80;
-let midEnergyCapDB = -40;
+let bg = 240;
+let lowEnergyMax = 1800;  //30 minutes
+let midEnergyMax = 300;   //5 minutes
+let hiEnergyMax = 60;     //1 minute
+let minEnergy = -120;   // ignore quiet sounds
+let lowEnergyCapDB = -100;
+let midEnergyCapDB = -80;
+let analysis = [];
+let logAnalysis = []
 
 mic = new p5.AudioIn();
 fft = new p5.FFT(smoothing,bins);
@@ -25,26 +27,166 @@ function stop(){
 }
 
 let gsketch = s => {
-  let logFrqzy, barWidth;
-  let cAmp = Array(bins).fill(0);
+  let barWidth;
+  // let cAmp = Array(bins).fill(0);
 
   s.setup = () => {
-    s.createCanvas(s.windowWidth, s.windowHeight/2);
-    s.background(bg);
-    s.stroke(bg);
+    let canvas = s.createCanvas(300, 300);
+    // s.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight); 
+    s.noStroke();
   }
 
   s.draw = () => {
-    fft.analyze();
-    logFrqzy = fft.logAverages(octBands);
-    barWidth = s.width/logFrqzy.length;
-    cAmp = logFrqzy.map((x, i) => cAmp[i] + x * (s.deltaTime/1000));
-    for (i = 0; i < logFrqzy.length; i++) {
-      s.fill(s.color(s.constrain(logFrqzy[i]*2, 0, 255), 255 - (s.constrain(logFrqzy[i] - 128, 0,127)*2), 0));
-      s.rect(i*barWidth, s.height, barWidth, -(cAmp[i] / threshold * s.height));
+    s.background(bg);
+    analysis = fft.analyze(bins, "dB");
+    logAnalysis = fft.logAverages(octBands);
+    barWidth = s.width/logAnalysis.length;
+    // cAmp = logFrqzy.map((x, i) => cAmp[i] + x * (s.deltaTime/1000));
+    for (i = 0; i < logAnalysis.length; i++) {
+      s.fill(
+        s.map(logAnalysis[i], -140, 0, 0, 512), 
+        s.map(logAnalysis[i], -140, 0, 512, 0),
+        0);
+      s.rect(i*barWidth, s.height, barWidth, s.map(logAnalysis[i], -140, 0, 0, -s.height));
     }
+    // axix labels
+    s.fill(0);
+    s.textAlign(s.LEFT);
+    s.text("0dB", 0, 10);
+    s.text("-70dB", 0, s.height/2);
+    s.text("-140dB", 0, s.height - 10);
+    s.textAlign(s.CENTER);
+    s.text(s.floor(octBands[s.floor(octBands.length/2)].ctr) + "Hz", s.width/2, s.height);
+    s.textAlign(s.RIGHT);
+    s.text(s.floor(octBands[octBands.length -1].hi) + "Hz", s.width, s.height);
   }
 }
+
+let sketchPrototype = function(p) {
+  // "public" variables 
+  p.bandRange = {start: 0, end: bins};
+  p.energyRange = {min: -140, max: 0};
+  p.maxTime = 35;
+
+  let curTime = 0;
+  let curAngle = 271;
+
+  p.setup = function() {
+    let canvas = p.createCanvas(300, 300);
+    // p.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight); 
+    p.angleMode(p.DEGREES);
+  }
+
+  p.draw = function() {
+    let avgEnergy = 0;
+    p.background(bg);
+
+    // calculate average energy
+    for(i = p.bandRange.start; i < p.bandRange.end; i++){
+      avgEnergy += logAnalysis[i];
+    }
+    avgEnergy = avgEnergy / (p.bandRange.end - p.bandRange.start);
+
+    // increment tiemer and update arc angle
+    if(avgEnergy >= p.energyRange.min && avgEnergy < p.energyRange.max){
+      curTime += p.deltaTime / 1000;
+      curAngle = p.map(curTime, 0, p.maxTime, 270, 630);
+    }
+
+  // draw chart
+    p.strokeWeight(25);
+    p.strokeCap(p.SQUARE);
+    p.noFill();
+    p.stroke(200);
+    p.circle(p.width / 2, p.height /2, 200);
+    // color
+    p.stroke(
+      p.map(curTime, 0, p.maxTime, 0, 512),     // red
+      p.map(curTime, 0, p.maxTime, 512, 0),     // green
+      0);
+    p.arc(p.width / 2, p.height / 2, 200, 200, 270, p.constrain(curAngle, 270, 630));
+
+    // outside arc
+    if(curTime >= p.maxTime){
+      p.stroke(200);
+      p.circle(p.width / 2, p.height /2, 250);
+      p.stroke(p.map(curTime, p.maxTime, p.maxTime * 2, 250, 0), 0, 0);
+      p.arc(p.width / 2, p.height / 2, 250, 250, 270, curAngle);
+    }
+
+  // draw text
+    // percent
+    p.noStroke();
+    p.textSize(50);
+    p.fill(0);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text(p.floor(curTime/p.maxTime * 100) + "%", p.width / 2, p.height / 2);
+    // time
+    p.textSize(20);
+    p.text(p.floor(curTime) + "s", p.width/2, p.height/3 * 2);
+    // energy range
+    p.textSize(15);
+    p.textAlign(p.LEFT);
+    p.text(p.energyRange.min + "dB" + " to " + p.energyRange.max + "dB", 10, 10);
+    // frequency range
+    let lowFrequency = p.floor(octBands[p.bandRange.start].lo);
+    let hiFrequency = p.floor(octBands[p.bandRange.end].hi);
+    p.textAlign(p.RIGHT);
+    p.text(lowFrequency + "Hz - " + hiFrequency + "Hz", p.width - 10, 10);
+  }
+}
+
+let divs = document.querySelectorAll("div.graph");
+
+let lBandCap = Math.trunc(octBands.length/3);
+let mBandCap = Math.trunc(octBands.length/3 * 2);
+let hBandCap = octBands.length;
+
+let eq = new p5(gsketch, document.querySelector("div.eq"));
+let lowLow = new p5(sketchPrototype, divs[0]);
+lowLow.bandRange = {start: 0, end: lBandCap - 1};
+lowLow.energyRange = {min: minEnergy, max: lowEnergyCapDB};
+lowLow.maxTime = lowEnergyMax;
+
+let lowMid = new p5(sketchPrototype, divs[1]);
+lowMid.bandRange = {start: 0, end: lBandCap - 1};
+lowMid.energyRange = {min: lowEnergyCapDB, max: midEnergyCapDB};
+lowMid.maxTime = midEnergyMax;
+
+let lowHi = new p5(sketchPrototype, divs[2]);
+lowHi.bandRange = {start: 0, end: lBandCap - 1};
+lowHi.energyRange = {min: midEnergyCapDB, max: 0}
+lowHi.maxTime = hiEnergyMax;
+
+let midLow = new p5(sketchPrototype, divs[3]);
+midLow.bandRange = {start: lBandCap, end: mBandCap - 1};
+midLow.energyRange = {min: minEnergy, max: lowEnergyCapDB};
+midLow.maxTime = lowEnergyMax;
+
+let midMid = new p5(sketchPrototype, divs[4]);
+midMid.bandRange = {start: lBandCap, end: mBandCap - 1};
+midMid.energyRange = {min: lowEnergyCapDB, max: midEnergyCapDB};
+midMid.maxTime = midEnergyMax;
+
+let midHi = new p5(sketchPrototype, divs[5]);
+midHi.bandRange = {start: lBandCap, end: mBandCap - 1};
+midHi.energyRange = {min: midEnergyCapDB, max: 0};
+midHi.maxTime = hiEnergyMax;
+
+let hiLow = new p5(sketchPrototype, divs[6]);
+hiLow.bandRange = {start: mBandCap, end: hBandCap - 1};
+hiLow.energyRange = {min: minEnergy, max: lowEnergyCapDB};
+hiLow.maxTime = lowEnergyMax;
+
+let hiMid = new p5(sketchPrototype, divs[7]);
+hiMid.bandRange = {start: mBandCap, end: hBandCap - 1};
+hiMid.energyRange = {min: lowEnergyCapDB, max: midEnergyCapDB};
+hiMid.maxTime = midEnergyMax;
+
+let hiHi = new p5(sketchPrototype, divs[8]);
+hiHi.bandRange = {start: mBandCap, end: hBandCap - 1};
+hiHi.energyRange = {min: midEnergyCapDB, max: 0};
+hiHi.maxTime = hiEnergyMax;
 
 let eqSketch = function(e) {
   e.setup = function() {
@@ -468,15 +610,15 @@ let highSketch = function(h) {
 };
 */
 //new p5(gsketch);
-let lowLowTest = new p5(lowLowSketch);
-let lowMidTest = new p5(lowMidSketch);
-let lowHiTest = new p5(lowHiSketch);
-let midLowTest = new p5(midLowSketch);
-let midMidTest = new p5(midMidSketch);
-let midHiTest = new p5(midHiSketch);
-let hiLowTest = new p5(hiLowSketch);
-let hiMidTest = new p5(hiMidSketch);
-let hiHiTest = new p5(hiHiSketch);
+// let lowLowTest = new p5(lowLowSketch);
+// let lowMidTest = new p5(lowMidSketch);
+// let lowHiTest = new p5(lowHiSketch);
+// let midLowTest = new p5(midLowSketch);
+// let midMidTest = new p5(midMidSketch);
+// let midHiTest = new p5(midHiSketch);
+// let hiLowTest = new p5(hiLowSketch);
+// let hiMidTest = new p5(hiMidSketch);
+// let hiHiTest = new p5(hiHiSketch);
 /*
 let bass = new p5(lowSketch);
 let mid = new p5(midSketch);
