@@ -32,7 +32,7 @@ let gsketch = s => {
 
   s.setup = () => {
     let canvas = s.createCanvas(300, 300);
-    // s.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight);
+    s.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight);
     s.noStroke();
   }
 
@@ -73,7 +73,7 @@ let sketchPrototype = function(p) {
 
   p.setup = function() {
     let canvas = p.createCanvas(300, 300);
-    // p.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight);
+    p.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight);
     p.angleMode(p.DEGREES);
   }
 
