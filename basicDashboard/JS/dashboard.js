@@ -32,7 +32,7 @@ let gsketch = s => {
 
   s.setup = () => {
     let canvas = s.createCanvas(300, 300);
-    // s.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight); 
+    // s.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight);
     s.noStroke();
   }
 
@@ -44,7 +44,7 @@ let gsketch = s => {
     // cAmp = logFrqzy.map((x, i) => cAmp[i] + x * (s.deltaTime/1000));
     for (i = 0; i < logAnalysis.length; i++) {
       s.fill(
-        s.map(logAnalysis[i], 0, 140, 0, 512), 
+        s.map(logAnalysis[i], 0, 140, 0, 512),
         s.map(logAnalysis[i], 0, 140, 512, 0),
         0);
       s.rect(i*barWidth, s.height, barWidth, s.map(logAnalysis[i], 0, 140, 0, -s.height));
@@ -63,7 +63,7 @@ let gsketch = s => {
 }
 
 let sketchPrototype = function(p) {
-  // "public" variables 
+  // "public" variables
   p.bandRange = {start: 0, end: octBands.length};
   p.energyRange = {min: 0, max: 140};
   p.maxTime = 35;
@@ -73,7 +73,7 @@ let sketchPrototype = function(p) {
 
   p.setup = function() {
     let canvas = p.createCanvas(300, 300);
-    // p.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight); 
+    // p.resizeCanvas(canvas.parent().clientWidth, canvas.parent().clientHeight);
     p.angleMode(p.DEGREES);
   }
 
