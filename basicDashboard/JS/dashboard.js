@@ -64,8 +64,8 @@ let gsketch = s => {
 
 let sketchPrototype = function(p) {
   // "public" variables 
-  p.bandRange = {start: 0, end: bins};
-  p.energyRange = {min: -140, max: 0};
+  p.bandRange = {start: 0, end: octBands.length};
+  p.energyRange = {min: 0, max: 140};
   p.maxTime = 35;
 
   let curTime = 0;
