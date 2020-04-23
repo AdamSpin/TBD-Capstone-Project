@@ -6,6 +6,12 @@
     body {
       overflow: hidden;
     }
+    div.controls {
+      text-align: center;
+    }
+    div.button {
+      margin: auto;
+    }
     div.grid {
       display: flex;
       flex-wrap: wrap;
@@ -24,8 +30,8 @@
 
   <body>
     <div class="controls">
-      <button onclick="start()">start</button>
-      <button onclick="stop()">stop</button>
+      <button class="button" onclick="start()">start</button>
+      <button class="button" onclick="stop()">stop</button>
     </div>
 
     <div class="eq"></div>
