@@ -2,36 +2,92 @@
 <html lang="en">
   <head>
     <style>
-    * { margin:0; padding:0; }
-    body {
-      overflow: hidden;
-    }
-    div.controls {
-      text-align: center;
-    }
-    div.button {
-      margin: auto;
-    }
-    div.grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-    }
-    div.graph {
-      flex: 0 0 32%;
-    }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overflow: hidden;
+      }
+      div.controls {
+        text-align: center;
+        padding-bottom: 10px;
+      }
+      div.button {
+        margin: auto;
+      }
+      div.grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      div.graph {
+        flex: 0 0 32%;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4caf50;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px #999;
+      }
+      .button:hover {
+        background-color: #3e8e41;
+      }
+      .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #999;
+        transform: translateY(4px);
+      }
+      .alert {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        background-color: #f7b42c;
+        background-image: linear-gradient(315deg, #f7b42c 0%, #fc575e 74%);
+        font-size: 72px;
+        text-align: center;
+        justify-content: center;
+      }
+      .alert {
+        color: white;
+        font: bold 52px Helvetica, Arial, Sans-Serif;
+        text-shadow: 1px 1px #fe4902, 2px 2px #fe4902, 3px 3px #fe4902;
+        -webkit-transition: all 0.12s ease-out;
+        -moz-transition: all 0.12s ease-out;
+        -ms-transition: all 0.12s ease-out;
+        -o-transition: all 0.12s ease-out;
+      }
     </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./JS/p5/p5.js"></script>
     <script src="./JS/p5/addons/p5.sound.js"></script>
+    <script src="./JS/html2canvas.min.js"></script>
     <title>Sound Dashboard</title>
   </head>
 
   <body>
+    <div class="alert" id="alert"></div>
     <div class="controls">
-      <button class="button" onclick="start()">start</button>
-      <button class="button" onclick="stop()">stop</button>
+      <button class="button" onclick="start()">START</button>
+      <button class="button" onclick="pause()">PAUSE</button>
+      <button class="button" onclick="stop()">END SESSION</button>
+      <!-- <div class="screenshot">
+        <video autoplay></video>
+        <img src=""></img>
+        <canvas style="display: none;"></canvas>
+        <button class="capture-button">Capture</button>
+        <button id="screenshot-button">Screenshot</button>
+  
+      </div> -->
     </div>
 
     <div class="eq"></div>
@@ -46,8 +102,10 @@
       <div class="graph"></div>
       <div class="graph"></div>
     </div>
+    
 
     <script src="JS/dashboard.js"></script>
     <script src="JS/amp.js"></script>
+    <script src="JS/sc.js"></script>
   </body>
 </html>
