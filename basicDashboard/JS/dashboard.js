@@ -15,6 +15,7 @@ let hiEnergyMax = 90;
 let minEnergy = 20; // ignore quiet sounds
 let lowEnergyCapDB = 40;
 let midEnergyCapDB = 60;
+let hiEnergyCapDB = 140;
 
 let analysis = [];
 let logAnalysis = [];
