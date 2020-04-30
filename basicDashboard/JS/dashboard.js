@@ -5,12 +5,17 @@ let smoothing = 0.3;
 let threshold = 10000;
 let bg = 240;
 let fr = 15;
-let lowEnergyMax = 360;  //Reset to 180
-let midEnergyMax = 180;   //Reset to 30
-let hiEnergyMax = 90;     //Reset to 6
+
+//Max amount of time allocated to being at low, med, and high energy
+let lowEnergyMax = 360;
+let midEnergyMax = 180;
+let hiEnergyMax = 90;
+
+//Energy levels to denote decibel bands. These values are in decibels
 let minEnergy = 20;   // ignore quiet sounds
 let lowEnergyCapDB = 40;
 let midEnergyCapDB = 60;
+
 let analysis = [];
 let logAnalysis = []
 
@@ -27,6 +32,7 @@ function stop(){
   mic.stop();
 }
 
+//Sketch for the equalizer at top of page
 let gsketch = s => {
   let barWidth;
   let canvas;
@@ -75,6 +81,7 @@ let gsketch = s => {
   }
 }
 
+//Prototype used for the 3x3 grid of dial graphs
 let sketchPrototype = function(p) {
   // "public" variables
   p.bandRange = {start: 0, end: octBands.length};
@@ -180,6 +187,8 @@ let hBandCap = octBands.length;
 
 let eq = new p5(gsketch, document.querySelector("div.eq"));
 
+//All definitions are in order of frequency range, then energy range
+//e.g. lowHi is low frequency, high energy. midLow is medium frequency, low energy
 let lowHi = new p5(sketchPrototype, divs[0]);
 lowHi.bandRange = {start: 0, end: lBandCap - 1};
 lowHi.energyRange = {min: midEnergyCapDB, max: 140}
