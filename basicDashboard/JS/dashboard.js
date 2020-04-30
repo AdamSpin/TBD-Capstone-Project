@@ -5,13 +5,17 @@ let smoothing = 0.3;
 let threshold = 10000;
 let bg = 240;
 let fr = 15;
-let lowEnergyMax = 360; //Reset to 180
-let midEnergyMax = 180; //Reset to 30
-let hiEnergyMax = 90; //Reset to 6
+
+//Max amount of time allocated to being at low, med, and high energy
+let lowEnergyMax = 360;
+let midEnergyMax = 180;
+let hiEnergyMax = 90;
+
+//Energy levels to denote decibel bands. These values are in decibels
 let minEnergy = 20; // ignore quiet sounds
 let lowEnergyCapDB = 40;
 let midEnergyCapDB = 60;
-let hiEnergyCapDB = 140;
+
 let analysis = [];
 let logAnalysis = [];
 
@@ -31,6 +35,7 @@ function pause() {
   mic.stop();
 }
 
+//Sketch for the equalizer at top of page
 let gsketch = (s) => {
   let barWidth;
   let canvas;
@@ -93,6 +98,7 @@ let gsketch = (s) => {
   };
 };
 
+//Prototype used for the 3x3 grid of dial graphs
 let sketchPrototype = function (p) {
   // "public" variables
   p.bandRange = { start: 0, end: octBands.length };
@@ -274,23 +280,17 @@ let hBandCap = octBands.length;
 
 let eq = new p5(gsketch, document.querySelector('div.eq'));
 
+//All definitions are in order of frequency range, then energy range
+//e.g. lowHi is low frequency, high energy. midLow is medium frequency, low energy
 let lowHi = new p5(sketchPrototype, divs[0]);
 lowHi.bandRange = { start: 0, end: lBandCap - 1 };
 lowHi.energyRange = { min: midEnergyCapDB, max: hiEnergyCapDB };
 lowHi.maxTime = hiEnergyMax;
 
-if (lowHi.curTime >= lowHi.maxTime) {
-  console.log('LOWHI HIT');
-}
-
 let midHi = new p5(sketchPrototype, divs[1]);
 midHi.bandRange = { start: lBandCap, end: mBandCap - 1 };
 midHi.energyRange = { min: midEnergyCapDB, max: hiEnergyCapDB };
 midHi.maxTime = hiEnergyMax;
-
-if (midHi.curTime >= midHi.maxTime) {
-  console.log('MIDHI HIT');
-}
 
 let hiHi = new p5(sketchPrototype, divs[2]);
 hiHi.bandRange = { start: mBandCap, end: hBandCap - 1 };
@@ -302,51 +302,27 @@ lowMid.bandRange = { start: 0, end: lBandCap - 1 };
 lowMid.energyRange = { min: lowEnergyCapDB, max: midEnergyCapDB };
 lowMid.maxTime = midEnergyMax;
 
-if (lowMid.curTime >= lowMid.maxTime) {
-  console.log('LOWMID HIT');
-}
-
 let midMid = new p5(sketchPrototype, divs[4]);
 midMid.bandRange = { start: lBandCap, end: mBandCap - 1 };
 midMid.energyRange = { min: lowEnergyCapDB, max: midEnergyCapDB };
 midMid.maxTime = midEnergyMax;
-
-if (midMid.curTime >= midMid.maxTime) {
-  console.log('MIDMID HIT');
-}
 
 let hiMid = new p5(sketchPrototype, divs[5]);
 hiMid.bandRange = { start: mBandCap, end: hBandCap - 1 };
 hiMid.energyRange = { min: lowEnergyCapDB, max: midEnergyCapDB };
 hiMid.maxTime = midEnergyMax;
 
-if (hiMid.curTime >= hiMid.maxTime) {
-  console.log('HIMID HIT');
-}
-
 let lowLow = new p5(sketchPrototype, divs[6]);
 lowLow.bandRange = { start: 0, end: lBandCap - 1 };
 lowLow.energyRange = { min: minEnergy, max: lowEnergyCapDB };
 lowLow.maxTime = lowEnergyMax;
-
-if (lowLow.curTime >= lowLow.maxTime) {
-  console.log('LOWLOW HIT');
-}
 
 let midLow = new p5(sketchPrototype, divs[7]);
 midLow.bandRange = { start: lBandCap, end: mBandCap - 1 };
 midLow.energyRange = { min: minEnergy, max: lowEnergyCapDB };
 midLow.maxTime = lowEnergyMax;
 
-if (midLow.curTime >= midLow.maxTime) {
-  console.log('MIDLOW HIT');
-}
-
 let hiLow = new p5(sketchPrototype, divs[8]);
 hiLow.bandRange = { start: mBandCap, end: hBandCap - 1 };
 hiLow.energyRange = { min: minEnergy, max: lowEnergyCapDB };
 hiLow.maxTime = lowEnergyMax;
-
-if (hiLow.curTime >= hiLow.maxTime) {
-  console.log('HILOW HIT');
-}
