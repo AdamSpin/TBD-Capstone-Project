@@ -1,0 +1,140 @@
+header {
+  background: lightblue;
+  font-size: 10px;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.main-container {
+  background: radial-gradient(50% 50% at 50% 50%, #ffffff 0%, #dadada 100%);
+  mix-blend-mode: normal;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.main-container .wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+}
+
+.main-container .wrapper .mid-eclipse {
+  position: absolute;
+  right: 50px;
+  top: -177px;
+}
+
+.main-container .wrapper .mid-eclipse img {
+  width: 496px;
+  height: 496px;
+  opacity: 0.1;
+}
+
+.main-container .wrapper .small-eclipse {
+  position: absolute;
+  left: 77px;
+  bottom: 0px;
+}
+
+.main-container .wrapper .small-eclipse img {
+  width: 380px;
+  height: 324px;
+}
+
+.main-container .wrapper .logoDiv img {
+  width: 433px;
+  height: 343px;
+}
+
+.main-container .wrapper .emailDiv {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.main-container .wrapper .emailDiv h1 {
+  font-family: 'Poppins', sans-serif;
+}
+
+.main-container .wrapper .emailDiv .inputEmail {
+  padding-left: 35px;
+  padding-top: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.main-container .wrapper .emailDiv .inputEmail #email {
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  text-align: center;
+  width: 546px;
+  height: 54px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 30px;
+}
+
+.main-container .wrapper .emailDiv .inputEmail .submit {
+  padding-left: 15px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+}
+
+.main-container .wrapper .emailDiv .inputEmail .submit input {
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid #000000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 30px;
+  background: white;
+  outline: none;
+  height: 54px;
+  width: 100px;
+}
+
+.main-container .wrapper .emailDiv .inputEmail .submit input:hover {
+  background-color: lightsteelblue;
+  cursor: pointer;
+}
+/*# sourceMappingURL=style.css.map */

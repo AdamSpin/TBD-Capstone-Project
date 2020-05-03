@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./CSS/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <script src="./JS/validate.js"></script>
+    <title>EarDash</title>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="wrapper">
+        <div class="mid-eclipse">
+          <img src="./mid-eclipse.svg" alt="mid" />
+        </div>
+        <div class="small-eclipse">
+          <img src="./small-eclipse.svg" alt="small" />
+        </div>
+        <div class="logoDiv">
+          <img src="./logo.PNG" alt="logo" />
+        </div>
+        <div class="emailDiv">
+          <h1>Email:</h1>
+          <div class="inputEmail">
+            <input
+              type="email"
+              placeholder="Enter an email address"
+              name="email"
+              id="email"
+            />
+            <div class="submit" >
+              <input type="submit" value="Submit" onclick="validateEmail()"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
