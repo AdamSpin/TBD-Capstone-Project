@@ -5,6 +5,7 @@ let smoothing = 0.3;
 let threshold = 10000;
 let bg = 240;
 let fr = 15;
+let enabled = false;
 
 //Max amount of time allocated to being at low, med, and high energy
 let lowEnergyMax = 360;
@@ -26,7 +27,10 @@ fft.setInput(mic);
 octBands = fft.getOctaveBands(octDiv);
 
 function start() {
-  mic.start();
+  if(!enabled){
+    eq.userStartAudio();
+    mic.start(() => enabled = true);
+  }
 }
 function stop() {
   mic.stop();
@@ -34,6 +38,7 @@ function stop() {
 }
 function pause() {
   mic.stop();
+  enabled = false;
 }
 
 //Sketch for the equalizer at top of page
