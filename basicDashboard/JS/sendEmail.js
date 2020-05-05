@@ -44,8 +44,8 @@ app.post('/send', (req, res) => {
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
-            user: process.env.EMAIL, // Your email user grabbed from .env file
-            pass: process.env.PASSWORD // Your gmail password grabbed from .env file
+            user: process.env.EMAIL, // Your email user grabbed from your own .env file
+            pass: process.env.PASSWORD // Your gmail password grabbed from your own .env file
         },
         tsl:{
             rejectUnauthorized:false
@@ -54,8 +54,8 @@ app.post('/send', (req, res) => {
     
         // send mail with defined transport object
         let info = await transporter.sendMail({
-        from: '"Test Email" <vigilantus2016@gmail.com>', // sender address
-        to: "vigilantus2016@gmail.com", // list of receivers
+        from: process.env.EMAIL , // sender address, can also work with strings (eg. '"Test Email" <myEmail@host.com>')
+        to: process.env.TEST_EMAIL, // list of receivers, can also work with strings (eg. 'myEmail@host.com')
         subject: "Hello, Just Testing ✔", // Subject line
         text: "Hello world?", // plain text body
         html: output // html body
